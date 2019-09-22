@@ -123,6 +123,11 @@ spdlog::logger *default_logger_raw();
 
 void set_default_logger(std::shared_ptr<spdlog::logger> default_logger);
 
+// Config spdlog log level from the env variable SPDLOG_LEVEL
+// e.g. SPDLOG_LEVEL=debug && ./a.out
+// Un recognized/malformed values will be ignored.
+void env_config();
+
 template<typename... Args>
 inline void log(source_loc source, level::level_enum lvl, string_view_t fmt, const Args &... args)
 {

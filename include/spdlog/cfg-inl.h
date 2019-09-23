@@ -55,7 +55,7 @@ namespace spdlog {
         }
 
 
-        SPDLOG_INLINE void levels_from_env()
+        SPDLOG_INLINE void init_from_env_levels()
         {
             using details::os::getenv;
             std::string levels = getenv("SPDLOG_LEVEL");
@@ -88,7 +88,7 @@ namespace spdlog {
             }
         }
 
-        SPDLOG_INLINE void patterns_from_env()
+        SPDLOG_INLINE void init_from_env_patterns()
         {
             using details::os::getenv;
             std::string patterns = getenv("SPDLOG_PATTERN");
@@ -97,7 +97,7 @@ namespace spdlog {
             // Init the global level first
             for (auto &nv : name_vals) {
                 auto &logger_name = std::get<0>(nv);
-                auto &pattern = std::get<1>(nv);                
+                auto &pattern = std::get<1>(nv);
                 if ((logger_name.empty() || logger_name == "*") && !pattern.empty())
                 {
                     spdlog::set_pattern(pattern);
@@ -112,13 +112,20 @@ namespace spdlog {
                 if (logger_name.empty() || logger_name == "*" || pattern.empty())
                 {
                     continue;
-                }               
-                auto logger = spdlog::get(logger_name);                
+                }
+                auto logger = spdlog::get(logger_name);
                 if (logger)
                 {
                     logger->set_pattern(pattern);
                 }
             }
         }
+
+        SPDLOG_INLINE void init_from_env()
+        {
+            init_from_env_levels();
+            init_from_env_patterns();
+        }
+
     }  // namespace cfg
 } // namespace spdlog

@@ -15,13 +15,17 @@ namespace spdlog
     // Examples:
     // export SPDLOG_LEVEL=debug 
     // export SPDLOG_LEVEL=logger1=debug,logger2=info,*=error
-    void levels_from_env();
+    void init_from_env_levels();
 
     // Config spdlog log pattern from the env variable SPDLOG_PATTERN 
     // Examples:
     // export SPDLOG_PATTERN=[%x] [%l] [%n] %v     
     // export SPDLOG_LEVEL=logger1=%v,*=[%x] [%l] [%n] %v    
-    void patterns_from_env();
+    void init_from_env_patterns();
+
+    // Init levels and patterns from env variabls SPDLOG_LEVEL & SPDLOG_PATTERN
+    void init_from_env();
+
  }
 }
 

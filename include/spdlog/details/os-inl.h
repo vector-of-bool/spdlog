@@ -460,6 +460,20 @@ SPDLOG_INLINE void wstr_to_utf8buf(wstring_view_t wstr, memory_buf_t &target)
 }
 #endif // (defined(SPDLOG_WCHAR_TO_UTF8_SUPPORT) || defined(SPDLOG_WCHAR_FILENAMES)) && defined(_WIN32)
 
+
+std::string SPDLOG_INLINE getenv(const char* field)
+{
+#if defined(_WIN32) && !defined(__cplusplus_winrt)
+    size_t len = 0;
+    char buf[128];
+    bool ok = ::getenv_s(&len , buf, sizeof(buf), field) == 0;
+    return ok ? buf : std::string{};
+#else // revert to getenv 
+    char *buf = ::getenv(field);
+    return buf ? buf : std::string{};    
+#endif
+
+}
 } // namespace os
 } // namespace details
 } // namespace spdlog

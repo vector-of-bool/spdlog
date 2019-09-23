@@ -79,6 +79,8 @@ public:
 
     void set_automatic_registration(bool automatic_regsistration);
 
+    void config_from_env();
+
     static registry &instance();
 
 private:

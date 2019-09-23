@@ -7,6 +7,7 @@
 #include "spdlog/cfg.h"
 #endif
 
+#include "spdlog/spdlog.h"
 #include "spdlog/details/os.h"
 #include "spdlog/details/registry.h"
 

@@ -18,8 +18,10 @@ void user_defined_example();
 void err_handler_example();
 void syslog_example();
 
+
 #include "spdlog/cfg.h"
 #include "spdlog/spdlog.h"
+
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 int main(int, char *[])

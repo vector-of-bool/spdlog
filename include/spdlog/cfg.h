@@ -8,9 +8,17 @@ namespace spdlog
  namespace cfg
  {
     // Config spdlog log level from the env variable SPDLOG_LEVEL 
-    // e.g. SPDLOG_LEVEL=debug && ./a.out
-    // Un recognized/malformed values will be ignored.
-    void init_from_env();
+    // Can accept multiple logger names
+    // Examples:
+    // export SPDLOG_LEVEL=debug 
+    // export SPDLOG_LEVEL=logger1=debug,logger2=info,*=error
+    void levels_from_env();
+
+    // Config spdlog log pattern from the env variable SPDLOG_PATTERN 
+    // Examples:
+    // export SPDLOG_PATTERN=[%x] [%l] [%n] %v     
+    // export SPDLOG_LEVEL=logger1=%v,*=[%x] [%l] [%n] %v    
+    void patterns_from_env();
  }
 }
 

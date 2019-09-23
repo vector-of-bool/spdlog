@@ -31,6 +31,7 @@ int main(int, char *[])
     auto l2 = spdlog::stderr_color_mt("logger2");
 
     spdlog::cfg::levels_from_env();
+    spdlog::cfg::patterns_from_env();
     l1->debug("Hello L1");
     //l2->debug("Hello L2");
     spdlog::debug("Hello global");

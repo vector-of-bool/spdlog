@@ -63,7 +63,7 @@ namespace spdlog {
             // Init the global level first
             for (auto &nv : name_vals) {
                 auto &logger_name = std::get<0>(nv);
-                auto log_level = level::from_str(std::get<1>(nv));
+                auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                 if (logger_name.empty() || logger_name == "*")
                 {
                     spdlog::set_level(log_level);
@@ -78,11 +78,44 @@ namespace spdlog {
                 {
                     continue;
                 }
-                auto log_level = level::from_str(std::get<1>(nv));
+                auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                 auto logger = spdlog::get(logger_name);
                 if (logger)
                 {
                     logger->set_level(log_level);
+                }
+            }
+        }
+
+        SPDLOG_INLINE void patterns_from_env()
+        {
+            using details::os::getenv;
+            std::string patterns = getenv("SPDLOG_PATTERN");
+            auto name_vals = extract_name_vals_(patterns);
+
+            // Init the global level first
+            for (auto &nv : name_vals) {
+                auto &logger_name = std::get<0>(nv);
+                auto &pattern = std::get<1>(nv);                
+                if ((logger_name.empty() || logger_name == "*") && !pattern.empty())
+                {
+                    spdlog::set_pattern(pattern);
+                    break;
+                }
+            }
+            // Init specific loggers
+            for (auto &nv : name_vals)
+            {
+                auto &logger_name = std::get<0>(nv);
+                auto &pattern = std::get<1>(nv);
+                if (logger_name.empty() || logger_name == "*" || pattern.empty())
+                {
+                    continue;
+                }               
+                auto logger = spdlog::get(logger_name);                
+                if (logger)
+                {
+                    logger->set_pattern(pattern);
                 }
             }
         }

@@ -464,7 +464,7 @@ SPDLOG_INLINE void wstr_to_utf8buf(wstring_view_t wstr, memory_buf_t &target)
 
 std::string SPDLOG_INLINE getenv(const char* field)
 {
-#if defined(_WIN32) && !defined(__cplusplus_winrt)
+#if defined(_MSC_VER) && !defined(__cplusplus_winrt)
     size_t len = 0;
     char buf[128];
     bool ok = ::getenv_s(&len , buf, sizeof(buf), field) == 0;

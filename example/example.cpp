@@ -18,11 +18,13 @@ void user_defined_example();
 void err_handler_example();
 void syslog_example();
 
+#include "spdlog/cfg.h"
 #include "spdlog/spdlog.h"
+
 
 int main(int, char *[])
 {
-    spdlog::config_from_env();
+    spdlog::cfg::from_env();
     spdlog::info("Welcome to spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG_VER_MINOR, SPDLOG_VER_PATCH);
     spdlog::trace("TRACE MESSAGE");
     spdlog::debug("DEBUG MESSAGE");

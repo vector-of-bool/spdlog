@@ -112,9 +112,4 @@ SPDLOG_INLINE void set_default_logger(std::shared_ptr<spdlog::logger> default_lo
     details::registry::instance().set_default_logger(std::move(default_logger));
 }
 
-SPDLOG_INLINE void config_from_env()
-{
-    details::registry::instance().config_from_env();
-}
-
 } // namespace spdlog

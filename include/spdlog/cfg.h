@@ -10,7 +10,7 @@ namespace spdlog
     // Config spdlog log level from the env variable SPDLOG_LEVEL 
     // e.g. SPDLOG_LEVEL=debug && ./a.out
     // Un recognized/malformed values will be ignored.
-    void from_env();
+    void init_from_env();
  }
 }
 

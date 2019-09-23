@@ -20,12 +20,19 @@ void syslog_example();
 
 #include "spdlog/cfg.h"
 #include "spdlog/spdlog.h"
-
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 int main(int, char *[])
 {
-    spdlog::cfg::from_env();
-    spdlog::info("Welcome to spdlog version {}.{}.{}  !", SPDLOG_VER_MAJOR, SPDLOG_VER_MINOR, SPDLOG_VER_PATCH);
-    spdlog::trace("TRACE MESSAGE");
-    spdlog::debug("DEBUG MESSAGE");
+    using namespace spdlog;
+    using namespace spdlog::sinks;
+
+    auto l1 = spdlog::stderr_color_mt("logger1");
+    auto l2 = spdlog::stderr_color_mt("logger2");
+
+    spdlog::cfg::levels_from_env();
+    l1->debug("Hello L1");
+    //l2->debug("Hello L2");
+    spdlog::debug("Hello global");
+    
 }

@@ -10,30 +10,81 @@
 #include "spdlog/details/os.h"
 #include "spdlog/details/registry.h"
 
+#include <string>
+#include <tuple>
+#include <sstream>
+
 namespace spdlog {
-namespace cfg {
+    namespace cfg {
 
-static std::string to_lower_(const std::string &str)
-{
-    std::string rv = str;
-    std::transform(str.begin(), str.end(), rv.begin(), [](char ch) {
-        return static_cast<char>((ch >= 'A' && ch <= 'Z') ? ch + ('a' - 'A') : ch);
-    });
-    return rv;
-}
-       
-SPDLOG_INLINE void from_env()
-{
-    auto spdlog_level = to_lower_(details::os::getenv("SPDLOG_LEVEL"));            
-    auto level = level::from_str(spdlog_level);
+        SPDLOG_INLINE std::string to_lower_(const std::string &str)
+        {
+            std::string rv = str;
+            std::transform(str.begin(), str.end(), rv.begin(), [](char ch) {
+                return static_cast<char>((ch >= 'A' && ch <= 'Z') ? ch + ('a' - 'A') : ch);
+            });
+            return rv;
+        }
 
-    // set t oinfo on unknown values (level::from_str(str) returns level::off for recognized str level)
-    if (level == level::off && spdlog_level != "off")
-    {
-        level = level::info;
-    }            
-    set_level(level);
-}
+        using name_val_tuple = std::tuple<std::string, std::string>;
 
-}  // namespace cfg
+        // return tuple with name, value from "name=value" string. replace with empty string on missing parts
+        SPDLOG_INLINE name_val_tuple extract_kv_(char sep, const std::string &str)
+        {
+            auto n = str.find(sep);
+            if (n == std::string::npos)
+            {
+                return std::make_tuple(std::string{}, str);
+            }
+            return std::make_tuple(str.substr(0, n), str.substr(n + 1));
+        }
+
+        // return name vector of value pairs from str.
+        // str format: "a=A,b=B,c=C,d=D,.."
+        SPDLOG_INLINE std::vector<name_val_tuple> extract_name_vals_(const std::string &str)
+        {
+            std::vector<name_val_tuple> rv;
+            std::string token;
+            std::istringstream tokenStream(str);
+            while (std::getline(tokenStream, token, ','))
+            {
+                rv.push_back(extract_kv_('=', token));
+            }
+            return rv;
+        }
+
+
+        SPDLOG_INLINE void levels_from_env()
+        {
+            using details::os::getenv;
+            std::string levels = getenv("SPDLOG_LEVEL");
+            auto name_vals = extract_name_vals_(levels);
+
+            // Init the global level first
+            for (auto &nv : name_vals) {
+                auto &logger_name = std::get<0>(nv);
+                auto log_level = level::from_str(std::get<1>(nv));
+                if (logger_name.empty() || logger_name == "*")
+                {
+                    spdlog::set_level(log_level);
+                    break;
+                }
+            }
+            // Init specific loggers
+            for (auto &nv : name_vals)
+            {
+                auto &logger_name = std::get<0>(nv);
+                if (logger_name.empty() || logger_name == "*")
+                {
+                    continue;
+                }
+                auto log_level = level::from_str(std::get<1>(nv));
+                auto logger = spdlog::get(logger_name);
+                if (logger)
+                {
+                    logger->set_level(log_level);
+                }
+            }
+        }
+    }  // namespace cfg
 } // namespace spdlog

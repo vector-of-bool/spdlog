@@ -17,7 +17,7 @@
 #include "spdlog/sinks/sink-inl.h"
 #include "spdlog/sinks/base_sink-inl.h"
 #include "spdlog/details/null_mutex.h"
-#include "spdlog/cfg-inl.h"
+#include "spdlog/cfg/env-inl.h"
 
 #include <mutex>
 
@@ -25,4 +25,4 @@
 template spdlog::logger::logger(std::string name, sinks_init_list::iterator begin, sinks_init_list::iterator end);
 template class spdlog::sinks::base_sink<std::mutex>;
 template class spdlog::sinks::base_sink<spdlog::details::null_mutex>;
-template class std::vector<spdlog::cfg::name_val_tuple>;
+

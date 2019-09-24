@@ -5,17 +5,27 @@
 
 #include "spdlog/common.h"
 
-// config spdlog from varius sources
+#include <unordered_map>
+
+// config spdlog from environment variables
 namespace spdlog 
 {
  namespace cfg
  {
+     struct logger_cfg
+     {         
+         level::level_enum level;
+         std::string pattern;         
+     };
+     
     // Config spdlog log level from the env variable SPDLOG_LEVEL 
     // Can accept multiple logger names
     // Examples:
     // export SPDLOG_LEVEL=debug 
     // export SPDLOG_LEVEL=logger1=debug,logger2=info,*=error
     void init_from_env_levels();
+
+    
 
     // Config spdlog log pattern from the env variable SPDLOG_PATTERN 
     // Examples:
@@ -26,9 +36,11 @@ namespace spdlog
     // Init levels and patterns from env variabls SPDLOG_LEVEL & SPDLOG_PATTERN
     void init_from_env();
 
+    std::unordered_map<std::string, logger_cfg> init_from_env2();
+
  }
 }
 
 #ifdef SPDLOG_HEADER_ONLY
-#include "cfg-inl.h"
+#include "env-inl.h"
 #endif // SPDLOG_HEADER_ONLY

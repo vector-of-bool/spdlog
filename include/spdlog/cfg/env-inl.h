@@ -4,7 +4,7 @@
 #pragma once
 
 #ifndef SPDLOG_HEADER_ONLY
-#include "spdlog/cfg.h"
+#include "spdlog/cfg/env.h"
 #endif
 
 #include "spdlog/spdlog.h"
@@ -125,6 +125,22 @@ namespace spdlog {
         {
             init_from_env_levels();
             init_from_env_patterns();
+        }
+
+        SPDLOG_INLINE std::unordered_map<std::string, logger_cfg> init_from_env2()
+        {
+            std::unordered_map<std::string, logger_cfg> rv;
+            std::string patterns = details::os::getenv("SPDLOG_PATTERN");
+            auto name_vals = extract_name_vals_(patterns);
+            for(auto &item: name_vals)
+            {
+                auto &logger_name = std::get<0>(item);
+                auto log_level = level::from_str(to_lower_(std::get<1>(item)));
+                rv[logger_name] = logger_cfg{log_level, ""};
+            }
+
+            return rv;
+
         }
 
     }  // namespace cfg

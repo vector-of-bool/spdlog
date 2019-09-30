@@ -64,9 +64,9 @@ namespace spdlog {
             // Init the global level first
             for (auto &nv : name_vals) {
                 auto &logger_name = std::get<0>(nv);
-                auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                 if (logger_name.empty() || logger_name == "*")
                 {
+                    auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                     spdlog::set_level(log_level);
                     break;
                 }
@@ -79,10 +79,10 @@ namespace spdlog {
                 {
                     continue;
                 }
-                auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                 auto logger = spdlog::get(logger_name);
                 if (logger)
                 {
+                    auto log_level = level::from_str(to_lower_(std::get<1>(nv)));
                     logger->set_level(log_level);
                 }
             }

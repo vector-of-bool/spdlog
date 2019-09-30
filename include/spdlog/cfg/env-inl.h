@@ -40,7 +40,7 @@ namespace spdlog {
             return std::make_tuple(str.substr(0, n), str.substr(n + 1));
         }
 
-        // return name vector of value pairs from str.
+        // return vector of name/value pairs from str.
         // str format: "a=A,b=B,c=C,d=D,.."
         SPDLOG_INLINE std::vector<name_val_tuple> extract_name_vals_(const std::string &str)
         {
